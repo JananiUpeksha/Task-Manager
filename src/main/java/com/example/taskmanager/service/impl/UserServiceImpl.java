@@ -7,8 +7,12 @@ import com.example.taskmanager.service.UserService;
 import com.example.taskmanager.utill.AppUtill;
 import com.example.taskmanager.utill.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,4 +31,17 @@ public class UserServiceImpl implements UserService {
         UserEntity saved = userDAO.save(mapping.toUserEntity(userDTO));
         return mapping.toUserDTO(saved);
     }
+    @Override
+    public Optional<UserDTO> findByUsername(String username) {
+        Optional<UserEntity> userByUsername = userDAO.findByUsername(username);
+        return userByUsername.map(mapping::toUserDTO);
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return username ->
+                (UserDetails) userDAO.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }
