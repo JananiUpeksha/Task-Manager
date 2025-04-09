@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class TaskEntity implements SuperEntity {
     @Id
     private Long id;
-    @Column(length = 20)
+    @Column(length = 50)
     private String title;
     @Column(length = 100)
     private String description;

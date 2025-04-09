@@ -19,13 +19,12 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
         try {
-            System.out.println(userDTO);
-            userService.saveUser(userDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            UserDTO savedUser = userService.saveUser(userDTO);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error saving user.");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
